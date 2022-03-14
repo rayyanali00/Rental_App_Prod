@@ -1,0 +1,161 @@
+{% extends 'base.html' %} {% block title %}
+<title>Product Detail</title>
+{% endblock %} {% block body %}
+<div class="row my-2">
+    <div class="col-lg-10 mx-auto">
+        <div class="card prod-card login-card mb-3">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <img src="{{product.prod_img.url}}" class="img-fluid rounded-start" alt="{{product.product_name}}" style="height:540px; width: 100%;">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div>
+                            {% csrf_token %}
+                        </div>
+                        <h5 class="card-title">{{product.product_name}}</h5>
+                        <p class="card-text">{{product.product_desc}}</p>
+                        <h4>TimePeriod : <i class="fa fa-plus add-time text-dark" aria-hidden="true"></i> <span class="timeperiod">{{product.timePeriod}}</span> <i class="fa fa-minus text-dark sub-time" aria-hidden="true"></i><span class="text-muted mx-2"
+                                style="font-size: 1rem;">*in days</span></h4>
+                        <h4>Quantity : <i class="fa fa-plus add-qty text-dark" aria-hidden="true"></i> <span class="quantity">1</span> <i class="fa fa-minus text-dark sub-qty" aria-hidden="true"></i></h4>
+                        <h4 class="mt-3">Price : pkr <span class="price">{{product.product_price}}</span> <span class="text-muted" style="font-size: 1rem;">for <span class="week"></span> days</span>
+                        </h4>
+                        <h4 class="mt-3">Your Bid </h4>
+                        <input type="number" placeholder="Place your bid" name="your_bid" class="form-control col-lg-4">
+                        <small class="text-muted">If you leave this field blacnk, we will consider original price mentioned above</small>
+                        <div class="text-end">
+                            <span class="tag text-center mx-3">
+                                {{product.prod_cat}}
+                            </span>
+                            <span class="tag text-center">
+                                {{product.prod_sub}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer mt-5">
+                        <button class="btn btn-primary mt-3 book-btn" style="width: 100%">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let csrf_token = $("input[name=csrfmiddlewaretoken]").val()
+    let baseurl = window.location.origin
+    console.log(baseurl)
+    let prod_dict = {
+        prod_name: "{{product.product_name}}",
+        prod_cat: "{{product.prod_cat}}",
+        prod_sub: "{{product.prod_sub}}",
+        total_price: parseFloat($(".price").text()),
+        quantity: 1,
+        your_bid_price: 0,
+        days: 1
+    }
+    let timepr;
+    let quantity;
+    let prod_price;
+    let orig_price = parseFloat($(".price").text())
+    $(".sub-time").addClass("d-none")
+    $(".sub-qty").addClass("d-none")
+    $(".week").text($(".timeperiod").text())
+    $(".add-time").on("click", function() {
+        timepr = parseInt($(".timeperiod").text())
+        timepr += 1
+        $(".week").text(timepr)
+        $(".timeperiod").text(timepr)
+        quantity = parseInt($(".quantity").text())
+        prod_price = parseFloat($(".price").text())
+        prod_price = (orig_price * timepr) * quantity
+        $(".price").text(prod_price)
+        prod_dict['total_price'] = prod_price
+        prod_dict['days'] = timepr
+        if (parseInt($(".timeperiod").text()) > 1) {
+            $(".sub-time").removeClass("d-none")
+        } else {
+            $(".sub-time").addClass("d-none")
+        }
+    })
+
+
+    $(".sub-time").on("click", function() {
+        timepr = parseInt($(".timeperiod").text())
+        timepr -= 1
+        $(".timeperiod").text(timepr)
+        $(".week").text(timepr)
+        quantity = parseInt($(".quantity").text())
+        prod_price = parseFloat($(".price").text())
+        prod_price = (prod_price - orig_price) * quantity
+        $(".price").text(prod_price)
+        prod_dict['total_price'] = prod_price
+        prod_dict['days'] = timepr
+        if (parseInt($(".timeperiod").text()) > 1) {
+            $(".sub-time").removeClass("d-none")
+        } else {
+            $(".sub-time").addClass("d-none")
+        }
+    })
+
+    $(".add-qty").on("click", function() {
+        timepr = parseInt($(".timeperiod").text())
+        quantity = parseInt($(".quantity").text())
+        quantity += 1
+        $(".quantity").text(quantity)
+        prod_price = parseFloat($(".price").text())
+        prod_price = (orig_price * timepr) * quantity
+        $(".price").text(prod_price)
+        prod_dict['total_price'] = prod_price
+        prod_dict['quantity'] = quantity
+
+        if (parseInt($(".quantity").text()) > 1) {
+            $(".sub-qty").removeClass("d-none")
+        } else {
+            $(".sub-qty").addClass("d-none")
+        }
+    })
+
+    $(".sub-qty").on("click", function() {
+        quantity = parseInt($(".quantity").text())
+        timepr = parseInt($(".timeperiod").text())
+        quantity -= 1
+        $(".quantity").text(quantity)
+        prod_price = parseFloat($(".price").text())
+        console.log(prod_price)
+        prod_price = (orig_price * quantity) * timepr
+        $(".price").text(prod_price)
+        prod_dict['total_price'] = prod_price
+        prod_dict['quantity'] = quantity
+        if (parseInt($(".quantity").text()) > 1) {
+            $(".sub-qty").removeClass("d-none")
+        } else {
+            $(".sub-qty").addClass("d-none")
+        }
+    })
+
+    $("input[name=your_bid]").on("change", function() {
+        prod_dict['your_bid_price'] = parseInt($(this).val())
+        console.log(prod_dict)
+    })
+
+    $(".book-btn").on("click", function() {
+        console.log(prod_dict)
+        $.ajax({
+            url: `${baseurl}/users/get_book_products/`,
+            method: "POST",
+            "headers": {
+                "accept": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            data: {
+                'data_dict': JSON.stringify(prod_dict),
+                'csrfmiddlewaretoken': csrf_token
+            },
+            dataType: 'json',
+            success: function(url) {
+                window.location.href = baseurl + url['url']
+            }
+        })
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %} {% block title %}
+<title>Checkout Details</title>
+{% endblock %}{% block body %}
+<div class="row">
+    <div class="col-lg-5 mx-auto">
+        <div class="card prod-card login-card">
+            <div class="card-header">
+                <h4>Shipping Details</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{success_url}}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email">Email address</label> {{form.email}}
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Shipping Address</label> {{form.address}}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="total_amount">Total Amount</label> {{form.total_amount}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="total_bid_price">Total Bid Price</label> {{form.your_bid_total}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label> {{form.country}}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="state">State</label> {{form.state}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="city">City</label> {{form.city}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="zip_code">Zip Code</label> {{form.zip_code}}
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliever_at">Delievery Date</label> {{form.deliever_at}}
+                        <small id="emailHelp" class="form-text text-muted">Make sure you give atleast 3 days headsup for the delievery.</small>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary book-btn">Checkout</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let dt = new Date()
+    let mn = dt.getMonth() + 1
+    let date = dt.getDate() + 3
+    date = date > 10 ? date : '0' + date
+    mn = mn > 10 ? mn : '0' + mn
+    dt = dt.getFullYear() + '-' + mn + '-' + date
+
+    $("#id_email").val("{{user.email}}")
+    $("#id_email, #id_total_amount, #id_your_bid_total").attr("readonly", true)
+    $("#id_total_amount").val("{{total_amount}}")
+    $("#id_your_bid_total").val("{{total_bid_price}}")
+    $("#id_deliever_at").removeAttr("type")
+    $("#id_deliever_at").attr("type", "date")
+    $("input,select").addClass("form-control")
+    $("#id_deliever_at").attr("min", dt)
+    $("select[name=country], select[name=state], select[name=city]").removeAttr("id")
+    $("select[name=country]").attr("id", "countryId")
+    $("select[name=country]").addClass("countries")
+    $("select[name=state]").attr("id", "stateId")
+    $("select[name=state]").addClass("states")
+    $("select[name=city]").attr("id", "cityId")
+    $("select[name=city]").addClass("cities")
+</script>
+<script src="//geodata.solutions/includes/countrystatecity.js"></script>
+{% endblock %}

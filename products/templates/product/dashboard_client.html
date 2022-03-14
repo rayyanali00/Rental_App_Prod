@@ -1,0 +1,118 @@
+{% extends 'base.html' %} {% block title %}
+<title>Products</title>
+{% endblock %}{% block body %}
+
+<div class="row d-flex flex-row ms-1">
+    <!-- <div class="col-lg-9"></div> -->
+    <div class="col-lg-3 ms-2 py-2 search-card">
+        <form action="{% url 'products:products' %}" method="POST">
+            <h4>Select Category</h4>
+            <hr> {% csrf_token %}
+            <div class="col-lg-8">
+                <select name="category" id="category" class="category form-select" aria-label="Default select example">
+                <option value="category">Select Category</option>
+            </select>
+            </div>
+            <div class="col-lg-8 mt-3">
+                <select name="sub_category" id="sub_category" class="sub_category form-select" aria-label="Default select example">
+                <option value="category">Select Sub-Category</option>
+            </select>
+            </div>
+            <div class="ms-3 mt-3">
+                <button type="submit" class="btn btn-success">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+
+    {% if products|length > 0 %} {% for i in products %}
+    <div class="col-lg-4 my-3">
+        <div class="card-group">
+            <div class="card prod-card login-card">
+                <img src="{{i.prod_img.url}}" class="card-img-top" alt="{{i.product_name}}" style="height: 300px;">
+                <div class="card-body">
+
+                    <h5 class="card-title">{{i.product_name}}</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer">
+                    {% if i.product_quantity > 0 %}
+                    <a href="{% url 'products:product_detail' i.id %}" class="btn btn-primary">Book Now</a> {% else %}
+                    <p class="text-danger">Out of stock</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    </script>
+    {% endfor %}
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        {% if products.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="page-item disabled"><span>&laquo;</span></li>
+        {% endif %} {% for i in products.paginator.page_range %} {% if products.number == i %}
+        <li class="page-item active"><a class="page-link" href="">{{i}} (current)</a>
+        </li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %} {% endfor %} {% if products.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="page-item disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% else %}
+<h1 class="text-start">No Product Found of such filter</h1>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.min.js" integrity="sha512-m2ssMAtdCEYGWXQ8hXVG4Q39uKYtbfaJL5QMTbhl2kc6vYyubrKHhr6aLLXW4ITeXSywQLn1AhsAaqrJl8Acfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var list = "{% url 'products:product_api' %}"
+    var category = document.getElementById("category")
+    var sub_category = document.getElementById("sub_category")
+    var sub_cat = []
+    var cat = [];
+
+
+    function populate_subcategory(cat, select_value) {
+        if (select_value) {
+            for (var f of cat) {
+                let createEle = document.createElement("option")
+                createEle.value = f
+                createEle.textContent = f
+                sub_category.appendChild(createEle)
+            }
+        }
+    }
+
+    function removeOptions(selectElement) {
+        var i, L = selectElement.options.length - 1;
+        for (i = L; i >= 0; i--) {
+            selectElement.remove(i);
+        }
+    }
+
+    axios.get(list)
+        .then((data) => {
+            cat = Object.keys(data.data)
+            cat.forEach((val, ind) => {
+                $(".category").append(`<option value=${val}>${val}</option>`)
+            })
+            $(".category").on("change", function() {
+                var cat_value = $(this).val()
+                removeOptions(sub_category);
+                populate_subcategory(data.data[cat_value], cat_value)
+            })
+
+        })
+        .catch(err => console.log(err))
+</script>
+
+
+{% endblock %}

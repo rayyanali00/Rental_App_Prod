@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.2/css/colReorder.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.0.2/css/scroller.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.3/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://editor.datatables.net/extensions/Editor/css/editor.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <script src="{% static 'js/datatable/moment-timezone.min.js' %}"></script>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.3/js/buttons.print.min.js"></script>
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
+
+    <script src="{% static 'js/datatable/structure.js' %}"></script>
+    <script src="{% static 'js/datatable/functions.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% block title %} {% endblock %} {% block css %} {% endblock %} {% block js %} {% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-bg navbar-light">
+        <div class="container-fluid">
+            {% if user.is_authenticated %}
+            <button class="btn toggle-btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+                <!-- <i class="bi bi-arrow-right-square-fill fs-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i> -->
+                <i class="fas fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+            </button> {% endif %} {% if user.user_role == 'Admin' %}
+            <a class="navbar-brand" href="{% url 'users:admin-dashboard' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% else %}
+            <a class="navbar-brand" href="{% url 'products:products' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'products:get-cart-api' %}" class="nav-link link text-truncate">
+                        <i class="fas fa-cart-plus"></i></a>
+                    <div class="dropdown me-5 mt-2">
+                        <button class="btn btn-secondary dropdown-btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="far fa-user"></i> {{user.first_name}}
+                    </button>
+                        <ul class="dropdown-menu me-5" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#"><i class="far fa-id-card"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'users:login' %}" class="nav-item nav-link">Login</a>
+                    <a href="{% url 'users:register' %}" class="nav-item nav-link">Register</a> {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
+        <button type="button" class="btn-close mt-3 me-2 ms-auto mb-2 mb-lg-0 text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div class="offcanvas-header">
+            <img src="{% static 'images/truck.png' %}" class="toggle-options mx-auto" alt="" title="More Options" style="cursor: pointer;">
+        </div>
+        <div class="offcanvas-body px-0">
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+                <!-- <li class="nav-item">
+                    <a href="{% url 'products:products' %}" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
+                    </a>
+                </li> -->
+                {% if user.user_role == 'Admin' %}
+                <li>
+                    <a href="{% url 'users:admin-dashboard' %}" data-bs-toggle="collapse" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-speedometer2"></i><span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Orders</span>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                        <li><a class="dropdown-item" href="{% url 'products:order-list-template' %}">All Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:order-request-template' %}">Order Requests</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:pending-order-template' %}">Pending Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:delievered-orders-template' %}">Delievered</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Payment</span>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                        <li><a class="dropdown-item" href="{% url 'payments:payment-list-templates' %}">Process Payment</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Products</span>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                        <li><a class="dropdown-item" href="{% url 'products:create-product' %}">Add Products</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:product-list-template' %}">Products List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'users:user-list-template' %}" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Users</span> </a>
+                </li>
+                <li>
+                    <a href="{% url 'products:send-return-email' %}" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Send Return Email</span> </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'products:get-cart-api' %}" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Cart</span> </a>
+                </li>
+                <li>
+                    <a href="{% url 'products:order-list-template' %}" data-bs-toggle="collapse " class="nav-link link text-truncate ">
+                        <i class="fs-5 bi-speedometer2 "></i><span class="ms-1 d-none d-sm-inline ">Orders</span> </a>
+                </li>
+                <li>
+                    <!-- <li><a class="dropdown-item" href="{% url 'products:order-request-template' %}">Order Requests</a></li> -->
+
+                    <a href="{% url 'products:order-request-template' %}" data-bs-toggle="collapse " class="nav-link link text-truncate ">
+                        <i class="fs-5 bi-speedometer2 "></i><span class="ms-1 d-none d-sm-inline ">Orders Request</span> </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fs-5 bi-bootstrap"></i><span class="ms-1 d-none d-sm-inline">Payment</span>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                        <li><a class="dropdown-item" href="{% url 'payments:payment-list-templates' %}">Process Payment</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+    <main class="container-fluid mt-5 " role='main'>
+        <div class="row ">
+            <div class="col-sm ">
+                {% include 'messages.html' %} {% block body %}{% endblock %}
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js " integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM " crossorigin="anonymous "></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+</body>
+
+</html>
