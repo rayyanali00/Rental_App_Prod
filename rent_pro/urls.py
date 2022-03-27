@@ -14,24 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,inclue,re_path
+from django.urls import path
 from django.conf.urls import include, url
 from . import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
-from django.views.static import serve
 import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('users.urls', namespace="users"), name="users"),
-    path('',RedirectView.as_view(url='/accounts/login/')),
+    # path('',RedirectView.as_view(url='/accounts/login/')),
+    path('',RedirectView.as_view(url='/users/products/')),
     path('users/',include('products.urls', namespace="products"), name="products"),
     path('payments/',include('payments.urls', namespace="payments"), name="payments"),
 
     path('accounts/', include('allauth.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
-    # re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),    
+    
 ]
 
 if settings.DEBUG:
