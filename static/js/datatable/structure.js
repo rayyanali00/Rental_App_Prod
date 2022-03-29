@@ -11,9 +11,7 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
             "defaultContent": "-",
             "targets": "_all"
         }],
-        // "order": [
-        //     [1, "asc"]
-        // ],
+        "searching": true,
         select: {
             style: 'multi'
         },
@@ -91,16 +89,16 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
     })
 
     //getting the value of search box
-    $('.dataTables_filter input').unbind().keyup(function(e) {
-        var value = $(this).val();
-        if (value.length > 3) {
-            table.search(value).draw();
-        } else {
-            //optional, reset the search if the phrase 
-            //is less then 3 characters long
-            table.search('').draw();
-        }
-    });
+    // $('.dataTables_filter input').unbind().keyup(function(e) {
+    //     var value = $(this).val();
+    //     if (value.length > 3) {
+    //         table.search(value).draw();
+    //     } else {
+    //         //optional, reset the search if the phrase 
+    //         //is less then 3 characters long
+    //         table.search('').draw();
+    //     }
+    // });
 
     $.fn.dataTable.moment = function(format, locale) {
         var types = $.fn.dataTable.ext.type;
