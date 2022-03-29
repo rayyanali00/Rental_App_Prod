@@ -90,6 +90,7 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
         console.log(table.row(this).data());
     })
 
+    //getting the value of search box
     $('.dataTables_filter input').unbind().keyup(function(e) {
         var value = $(this).val();
         if (value.length > 3) {
