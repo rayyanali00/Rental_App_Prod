@@ -11,9 +11,9 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
             "defaultContent": "-",
             "targets": "_all"
         }],
-        "order": [
-            [1, "asc"]
-        ],
+        // "order": [
+        //     [1, "asc"]
+        // ],
         select: {
             style: 'multi'
         },
